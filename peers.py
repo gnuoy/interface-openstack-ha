@@ -56,3 +56,7 @@ class OpenstackHAPeers(RelationBase):
         if all(data.values()):
             return True
         return False
+
+    def set_address(self, address_type, address):
+        for conv in self.conversations():
+            conv.set_remote(key='{}-address'.format(address_type), value=address)
