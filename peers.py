@@ -59,4 +59,26 @@ class OpenstackHAPeers(RelationBase):
 
     def set_address(self, address_type, address):
         for conv in self.conversations():
-            conv.set_remote(key='{}-address'.format(address_type), value=address)
+            conv.set_remote(
+                key='{}-address'.format(address_type),
+                value=address)
+
+    def send_all(self, settings, store_local=False):
+        for conv in self.conversations():
+            conv.set_remote(data=settings)
+            if store_local:
+                 conv.set_local(data=settings)        
+
+    def retrieve_local(self, key):
+        for conv in self.conversations():
+            if conv.get_local(key):
+                return conv.get_local(key)
+
+    def retrieve_remote(self, key):
+        values = []
+        for conv in self.conversations():
+            value = conv.get_remote(key)
+            if value:
+                values.append(value)
+        return values
+
